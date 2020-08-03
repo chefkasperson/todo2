@@ -11,7 +11,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true})
+mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true, useUnifiedTopology: true})
 
 const itemsSchema = {
   name: String
@@ -31,19 +31,22 @@ const item3 = new Item({
 
 const defaultItems = [item1, item2, item3]
 
-Item.insertMany(defaultItems, function(err){
-  if (err) {
-    console.log(err)
-  } else {
-    console.log("Successfully saved defalut items to database")
-  }
-})
+// Item.insertMany(defaultItems, function(err){
+//   if (err) {
+//     console.log(err)
+//   } else {
+//     console.log("Successfully saved defalut items to database")
+//   }
+// })
 
 app.get("/", function(req, res) {
 
-const day = date.getDate();
+  const day = date.getDate();
+  Item.find({}, function(err, foundItems){
+    res.render("list", {listTitle: "Today", newListItems: foundItems});
+  })
 
-  res.render("list", {listTitle: "Today", newListItems: items});
+
 
 });
 
