@@ -13,14 +13,37 @@ app.use(express.static("public"));
 
 mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true})
 
-const todoSchema = {
+const itemsSchema = {
   name: String
 }
+
+const Item = mongoose.model("Item", itemsSchema)
+
+const item1 = new Item({
+  name: "Study"
+})
+const item2 = new Item({
+  name: "Write a Blog"
+})
+const item3 = new Item({
+  name: "Network with peeps"
+})
+
+const defaultItems = [item1, item2, item3]
+
+Item.insertMany(defaultItems, function(err){
+  if (err) {
+    console.log(err)
+  } else {
+    console.log("Successfully saved defalut items to database")
+  }
+})
+
 app.get("/", function(req, res) {
 
 const day = date.getDate();
 
-  res.render("list", {listTitle: day, newListItems: items});
+  res.render("list", {listTitle: "Today", newListItems: items});
 
 });
 
